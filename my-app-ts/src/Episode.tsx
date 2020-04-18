@@ -1,18 +1,11 @@
 import React from "react";
+import { EpisodeProps } from "./interfaces";
+import { toggleFavoriteAction } from "./Actions";
 import { Store } from "./store";
-import { EpisodeProps, IAction } from "./interfaces";
 
 export default function Episode(props: EpisodeProps) {
   const { episode } = props;
-  const { dispatch } = React.useContext(Store);
-
-  const toggleFavoriteAction = (): IAction => {
-    episode.favorite = !episode.favorite;
-    return dispatch({
-      type: "UPDATE_EPISODE",
-      payload: episode
-    });
-  };
+  const { state, dispatch } = React.useContext(Store);
 
   return (
     <section key={episode.id} className="episode-box">
@@ -23,7 +16,10 @@ export default function Episode(props: EpisodeProps) {
           {" "}
           Season: {episode.season} | Number: {episode.number} | Favorite:{" "}
         </div>
-        <button type="button" onClick={() => toggleFavoriteAction()}>
+        <button
+          type="button"
+          onClick={() => toggleFavoriteAction(dispatch, episode)}
+        >
           {episode.favorite ? "Favorited" : "Favorite"}
         </button>
       </section>
