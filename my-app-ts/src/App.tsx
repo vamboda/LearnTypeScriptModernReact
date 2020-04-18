@@ -1,5 +1,9 @@
 import React from "react";
 import { Store } from "./store";
+import Episode from "./Episode";
+import { IEpisode } from "./interfaces";
+
+const EpisodeList = React.lazy<any>(() => import("./EpisodeList"));
 export default function App(): JSX.Element {
   const { state, dispatch } = React.useContext(Store);
   React.useEffect(() => {
@@ -16,11 +20,27 @@ export default function App(): JSX.Element {
       payload: dataJson._embedded.episodes
     });
   };
+
   return (
     <React.Fragment>
       {console.log(state)}
-      <h1>Rick & Morty</h1>
-      <p>Pick your favorite episode:!!!</p>
+      <header className="header">
+        <div>
+          <h1>Rick & Morty</h1>
+          <p>Pick your favorite episode:!!!</p>
+        </div>
+        <div>
+          Favvourite(s):{" "}
+          {state.episodes.filter((e: IEpisode) => e.favorite === true).length}
+        </div>
+      </header>
+      <section className="episode-layout">
+        {state.episodes.length > 0 && (
+          <React.Suspense fallback={"Loading..."}>
+            <EpisodeList episodes={state.episodes} />
+          </React.Suspense>
+        )}
+      </section>
     </React.Fragment>
   );
 }

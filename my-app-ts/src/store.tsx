@@ -1,17 +1,8 @@
 import React from "react";
+import { IEpisode, IState, IAction } from "./interfaces";
 
-interface IState {
-  episodes: [];
-  favorites: [];
-}
-
-interface IAction {
-  type: string;
-  payload: any;
-}
 const initialState: IState = {
-  episodes: [],
-  favorites: []
+  episodes: []
 };
 
 export const Store = React.createContext<IState | any>(initialState);
@@ -20,6 +11,16 @@ export function reducer(state: IState, action: IAction): IState {
   switch (action.type) {
     case "FETCH_DATA":
       state = { ...state, episodes: action.payload };
+      break;
+    case "UPDATE_EPISODE":
+      state = {
+        ...state,
+        episodes: state.episodes.map(
+          (e: IEpisode): IEpisode => {
+            return e.id === action.payload.id ? action.payload : e;
+          }
+        )
+      };
       break;
     default:
       break;
